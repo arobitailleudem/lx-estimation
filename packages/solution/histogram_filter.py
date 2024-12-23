@@ -25,18 +25,17 @@ def histogram_predict(belief, left_encoder_ticks, right_encoder_ticks, grid_spec
 
     # TODO calculate v and w from ticks using kinematics.
     #  You will need  some parameters in the `robot_spec` defined above
-    wheel_radius = robot_spec["wheel_radius"]  # Radius of the wheel (meters)
-    wheel_radius = robot_spec["wheel_radius"]  # Wheel radius (meters)
-    wheel_base = robot_spec["wheel_baseline"]  # Distance between wheels (meters)
-    dt = robot_spec["encoder_resolution"]  # This is the assumed time step between encoder readings
+    wheel_radius = robot_spec["wheel_radius"]  
+    wheel_radius = robot_spec["wheel_radius"]  
+    wheel_baseline = robot_spec["wheel_baseline"]  
+    dt = robot_spec["encoder_resolution"]  
 
-        # Calculate wheel velocities
     left_velocity = (left_encoder_ticks / robot_spec["encoder_resolution"]) * (2 * np.pi * wheel_radius)  # m/s
     right_velocity = (right_encoder_ticks / robot_spec["encoder_resolution"]) * (2 * np.pi * wheel_radius)  # m/s
 
-        # Calculate linear and angular velocity
+
     v = (left_velocity + right_velocity) / 2  # m/s
-    w = (right_velocity - left_velocity) / wheel_base
+    w = (right_velocity - left_velocity) / wheel_baseline
 
     # You may find the following code useful to find the current best heading estimate:
     maxids = np.unravel_index(belief_in.argmax(), belief_in.shape)
@@ -192,7 +191,6 @@ def histogram_update(belief, segments, road_spec, grid_spec):
         #belief = measurement_likelihood
         belief = belief * measurement_likelihood 
 
-        # Normalize the belief to ensure it sums to 1
         if np.sum(belief) > 0:
             belief /= np.sum(belief)
     return measurement_likelihood, belief
